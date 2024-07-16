@@ -2,6 +2,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium_project.base.base_class import Base
+from selenium.webdriver.common.keys import Keys
 
 
 class FindGroup(Base):
@@ -22,5 +23,38 @@ class FindGroup(Base):
     product_1 = '//a[@class="full-unstyled-link"][1]'
     product_2 = '//a[@class="full-unstyled-link"][1]'
     cart = '//a[@id="cart-icon-bubble"]'
+
+    '''Getters'''
+
+    def get_search_button(self):
+        return WebDriverWait(self.driver, 15).until(
+            EC.element_to_be_clickable((By.XPATH, self.search_button)))
+
+    def get_search_string(self):
+        return WebDriverWait(self.driver, 15).until(
+            EC.element_to_be_clickable((By.XPATH, self.search_string)))
+
+    '''Actions'''
+
+    def click_search_button(self):
+        self.get_search_button().click()
+        print('Clicked search button')
+
+    def put_info_search_string(self, group_name):
+        self.get_search_string().click()
+        self.get_search_string().send_keys(group_name)
+        print('Write down the group name')
+
+    def submit_search(self):
+        self.get_search_string().send_keys(Keys.ENTER)
+        print('Pressed Enter to submit search')
+
+    '''Methods'''
+
+    def input_information(self):
+        self.get_current_url()
+        self.click_search_button()
+        self.put_info_search_string('Stray Kids')
+        self.submit_search()
 
 
