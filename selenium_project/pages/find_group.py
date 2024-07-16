@@ -18,5 +18,9 @@ class FindGroup(Base):
     availability = '//details[@id="Details-2-template--15876164845825__main"]'
     in_stock_checkbox = '//input[@id="Filter-Availability-1"]'
     sort_by = '//select[@id="SortBy"]'
+    price_low_to_high = '//option[@value="price-ascending"]'
+    product_1 = '//a[@class="full-unstyled-link"][1]'
+    product_2 = '//a[@class="full-unstyled-link"][1]'
+    cart = '//a[@id="cart-icon-bubble"]'
 
 
