@@ -26,6 +26,7 @@ class FindGroup(Base):
     product_1 = '//a[@class="full-unstyled-link"][1]'
     product_2 = '//a[@class="full-unstyled-link"][1]'
     cart = '//a[@id="cart-icon-bubble"]'
+    product_prices = '//div[@class="price__container"]'
 
     '''Getters'''
 
@@ -64,6 +65,10 @@ class FindGroup(Base):
     def get_price_low_to_high(self):
         return WebDriverWait(self.driver, 15).until(
             EC.element_to_be_clickable((By.XPATH, self.price_low_to_high)))
+
+    def get_product_prices(self):
+        return WebDriverWait(self.driver, 15).until(
+            EC.presence_of_all_elements_located((By.XPATH, self.product_prices)))
 
     '''Actions'''
 
@@ -106,9 +111,9 @@ class FindGroup(Base):
         self.get_in_stock_checkbox().send_keys(Keys.ESCAPE)
         print('Clicked in stock checkbox')
 
-    def click_sort_by(self):
-        self.get_sort_by().click()
-        print('Clicked sort by button')
+    # def click_sort_by(self):
+    #     self.get_sort_by().click()
+    #     print('Clicked sort by button')
 
     def click_price_low_to_high(self):
         self.get_price_low_to_high().click()
@@ -129,9 +134,14 @@ class FindGroup(Base):
         self.click_availability_button()
         time.sleep(1)
         self.click_in_stock_checkbox()
-        self.click_sort_by()
+        # self.click_sort_by()
         time.sleep(3)
         self.click_price_low_to_high()
         time.sleep(3)
 
-
+    def check_prices_sorted(self):
+        prices_elements = self.get_product_prices()
+        prices = [float(price.text.replace('$', '')) for price in prices_elements]
+        sorted_prices = sorted(prices)
+        assert prices == sorted_prices, "Prices are not sorted in ascending order"
+        print('Prices are sorted in ascending order')

@@ -9,5 +9,5 @@ def test_buy_product_1(set_up):
     print('Start test 1')
     login_page = FindGroup(driver)
     login_page.find_group_with_settings()
-
+    login_page.check_prices_sorted()
     time.sleep(3)
