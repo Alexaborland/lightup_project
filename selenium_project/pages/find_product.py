@@ -22,11 +22,11 @@ class FindGroup(Base):
     availability = '//details[@id="Details-2-template--15876164845825__main"]'
     in_stock_checkbox = '//label[@for="Filter-Availability-1"]'
     sort_by = '//select[@id="SortBy"]'
-    price_low_to_high = '//option[@value="price-ascending"]'
+    price_low_to_high = '//*[@id="SortBy"]/option[2]'
     product_1 = '//a[@class="full-unstyled-link"][1]'
-    product_2 = '//a[@class="full-unstyled-link"][1]'
+    product_2 = '//a[@class="full-unstyled-link"][2]'
     cart = '//a[@id="cart-icon-bubble"]'
-    product_prices = '//div[@class="price__container"]'
+    product_prices = '//span[@class="price-item price-item--regular"]'
 
     '''Getters'''
 
@@ -111,13 +111,17 @@ class FindGroup(Base):
         self.get_in_stock_checkbox().send_keys(Keys.ESCAPE)
         print('Clicked in stock checkbox')
 
-    # def click_sort_by(self):
-    #     self.get_sort_by().click()
-    #     print('Clicked sort by button')
-
-    def click_price_low_to_high(self):
-        self.get_price_low_to_high().click()
+    def click_sort_by_low_to_high(self):
+        self.get_sort_by().click()
+        self.get_sort_by().send_keys(Keys.ARROW_DOWN)
+        self.get_sort_by().send_keys(Keys.ESCAPE)
         print('Clicked sort by button')
+
+    # def click_price_low_to_high(self):
+    #     self.get_price_low_to_high().click()
+    #     self.get_price_low_to_high().click()
+    #     time.sleep(2)
+    #     print('Clicked sort by button')
 
     '''Methods'''
 
@@ -134,14 +138,28 @@ class FindGroup(Base):
         self.click_availability_button()
         time.sleep(1)
         self.click_in_stock_checkbox()
-        # self.click_sort_by()
+        self.click_sort_by_low_to_high()
         time.sleep(3)
-        self.click_price_low_to_high()
+        # self.click_price_low_to_high()
         time.sleep(3)
 
     def check_prices_sorted(self):
         prices_elements = self.get_product_prices()
-        prices = [float(price.text.replace('$', '')) for price in prices_elements]
+        prices = []
+
+        for price_element in prices_elements:
+            price_text = price_element.text.strip().replace('$', '').replace(',', '').replace(' CAD', '')
+            if price_text:  # Проверка на пустую строку
+                try:
+                    price = float(price_text)
+                    prices.append(price)
+                except ValueError:
+                    print(f"Could not convert price text '{price_text}' to float.")
+
+        if not prices:
+            raise ValueError("No valid prices were extracted from the page.")
+
+        print(f"Extracted prices: {prices}")
         sorted_prices = sorted(prices)
         assert prices == sorted_prices, "Prices are not sorted in ascending order"
         print('Prices are sorted in ascending order')
