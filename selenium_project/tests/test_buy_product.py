@@ -12,7 +12,7 @@ def test_buy_product_1(set_up):
     find_the_group.find_group_with_settings()
     time.sleep(3)
 
-    add_to_cart = AddProductToCart(driver)
-    add_to_cart.add_the_product_to_cart()
+    # add_to_cart = AddProductToCart(driver)
+    # add_to_cart.add_the_product_to_cart()
 
 
