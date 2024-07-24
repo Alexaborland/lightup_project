@@ -23,10 +23,9 @@ class FindGroup(Base):
     in_stock_checkbox = '//label[@for="Filter-Availability-1"]'
     sort_by = '//select[@id="SortBy"]'
     price_low_to_high = '//*[@id="SortBy"]/option[2]'
-    product_1 = '//a[@class="full-unstyled-link"][1]'
-    product_2 = '//a[@class="full-unstyled-link"][2]'
     cart = '//a[@id="cart-icon-bubble"]'
     product_prices = '//span[@class="price-item price-item--regular"]'
+    add_to_cart_button = '//button[@name="add"]'
 
     '''Getters'''
 
@@ -117,32 +116,6 @@ class FindGroup(Base):
         self.get_sort_by().send_keys(Keys.ESCAPE)
         print('Clicked sort by button')
 
-    # def click_price_low_to_high(self):
-    #     self.get_price_low_to_high().click()
-    #     self.get_price_low_to_high().click()
-    #     time.sleep(2)
-    #     print('Clicked sort by button')
-
-    '''Methods'''
-
-    def find_group_with_settings(self):
-        self.get_current_url()
-        self.click_search_button()
-        self.write_info_search_string('Stray Kids')
-        self.submit_search()
-        self.click_filter_price_button()
-        self.write_price_from('20')
-        self.write_price_to('50')
-        self.submit_price_range()
-        time.sleep(1)
-        self.click_availability_button()
-        time.sleep(1)
-        self.click_in_stock_checkbox()
-        self.click_sort_by_low_to_high()
-        time.sleep(3)
-        # self.click_price_low_to_high()
-        time.sleep(3)
-
     def check_prices_sorted(self):
         prices_elements = self.get_product_prices()
         prices = []
@@ -163,3 +136,25 @@ class FindGroup(Base):
         sorted_prices = sorted(prices)
         assert prices == sorted_prices, "Prices are not sorted in ascending order"
         print('Prices are sorted in ascending order')
+
+    '''Methods'''
+
+    def find_group_with_settings(self):
+        self.get_current_url()
+        self.click_search_button()
+        self.write_info_search_string('Stray Kids')
+        self.submit_search()
+        self.click_filter_price_button()
+        self.write_price_from('20')
+        self.write_price_to('50')
+        self.submit_price_range()
+        time.sleep(1)
+        self.click_availability_button()
+        time.sleep(1)
+        self.click_in_stock_checkbox()
+        self.click_sort_by_low_to_high()
+        time.sleep(3)
+        self.check_prices_sorted()
+        time.sleep(3)
+
+
