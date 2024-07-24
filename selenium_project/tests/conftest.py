@@ -19,7 +19,7 @@ def set_up():
 
     yield driver
 
-    driver.quit()
+    # driver.quit()
     print('\nFinish test')
 
 

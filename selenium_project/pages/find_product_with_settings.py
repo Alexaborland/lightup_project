@@ -1,12 +1,10 @@
 import time
-
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium_project.base.base_class import Base
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
-
 
 class FindGroup(Base):
     def __init__(self, driver):
@@ -161,31 +159,33 @@ class FindGroup(Base):
         assert prices == sorted_prices, "Prices are not sorted in ascending order"
         print('Prices are sorted in ascending order')
 
-    def scroll_to_element_1(self, element):
-        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
+    def scroll_to_element(self, element):
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
+        time.sleep(1)  # Добавляем паузу после скроллинга
         print('Scrolled to element')
 
     def click_on_the_product(self):
         first_product = self.get_product_link_1()
-        self.scroll_to_element_1(first_product)
+        self.scroll_to_element(first_product)
         first_product.click()
         print('Clicked on the product')
+
+    def scroll_to_product_version(self, element):
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
+        time.sleep(1)  # Добавляем паузу после скроллинга
+        print('Scrolled to bar version')
+
+    def click_on_the_picked_member(self):
+        version_element = self.get_version_label()
+        self.scroll_to_element(version_element)
+        version_element.click()
+        print('Clicked on member version')
 
     def check_version_label(self):
         version_element = self.get_version_label()
         version_text = version_element.text
         assert "I.N" in version_text, f"Expected 'I.N' in version text but got '{version_text}'"
         print('Version label contains "I.N"')
-
-    def scroll_to_product_version(self, element):
-        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
-        print('Scrolled to bar version')
-
-    def click_on_the_picked_member(self):
-        version_bar_product = self.get_product_versions()
-        self.scroll_to_product_version(version_bar_product)
-        version_bar_product.click()
-        print('Clicked on member version')
 
     def click_add_to_cart_button(self):
         self.get_add_to_cart_button().click()
@@ -212,9 +212,8 @@ class FindGroup(Base):
         time.sleep(3)
         self.click_on_the_product()
         time.sleep(3)
+        self.click_on_the_picked_member()
         self.check_version_label()
-        self.click_version_radio_button()
+        time.sleep(3)
         self.click_add_to_cart_button()
         time.sleep(3)
-
-
