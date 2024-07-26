@@ -5,6 +5,8 @@ from selenium.webdriver.common.by import By
 from selenium_project.base.base_class import Base
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
+from selenium.common.exceptions import TimeoutException
+
 
 class FindGroup(Base):
     def __init__(self, driver):
@@ -28,6 +30,8 @@ class FindGroup(Base):
     member_version_button = '//label[@for="template--15876165009665__main-1-7"]'
     version_label = '//label[contains(text(), "I.N")]'
     add_to_cart_button = '//button[@name="add"]'
+    checkout_button = '//button[@class="qsc2-basic qsc2-btn qsc2-checkout-button"]'
+    member_version_checkout = '//p[@class="_1x52f9s1 _1fragemo1 _1x52f9st _1fragemqb _1x52f9sp"]'
 
     '''Getters'''
 
@@ -90,6 +94,14 @@ class FindGroup(Base):
     def get_add_to_cart_button(self):
         return WebDriverWait(self.driver, 15).until(
             EC.visibility_of_element_located((By.XPATH, self.add_to_cart_button)))
+
+    def get_checkout_button(self):
+        return WebDriverWait(self.driver, 15).until(
+            EC.element_to_be_clickable((By.XPATH, self.checkout_button)))
+
+    def get_member_version_checkout(self):
+        return WebDriverWait(self.driver, 30).until(  # Увеличили время ожидания до 30 секунд
+            EC.visibility_of_element_located((By.XPATH, self.member_version_checkout)))
 
     '''Actions'''
 
@@ -191,13 +203,26 @@ class FindGroup(Base):
         self.get_add_to_cart_button().click()
         print('Clicked cart button')
 
+    def click_checkout_button(self):
+        self.get_checkout_button().click()
+        print('Clicked checkout button')
+
+    def check_member_version_checkout(self):
+        print('Waiting for member version in checkout...')
+        try:
+            version_element_checkout = self.get_member_version_checkout()
+            print(f"Member version found in checkout: {version_element_checkout.text}")
+        except TimeoutException:
+            self.driver.save_screenshot('timeout_error_screenshot.png')
+            raise AssertionError("Member version not found in checkout")
+
     '''Methods'''
 
     def find_group_with_settings(self):
-        self.get_current_url()
         self.click_search_button()
         self.write_info_search_string('Stray Kids')
         self.submit_search()
+        time.sleep(1)
         self.click_filter_price_button()
         self.write_price_from('20')
         self.write_price_to('50')
@@ -216,4 +241,9 @@ class FindGroup(Base):
         self.check_version_label()
         time.sleep(3)
         self.click_add_to_cart_button()
-        time.sleep(3)
+        time.sleep(2)
+        self.click_checkout_button()
+        time.sleep(2)
+        self.get_current_url()
+        time.sleep(10)
+        self.check_member_version_checkout()
