@@ -8,7 +8,7 @@ from selenium.webdriver import ActionChains
 from selenium.common.exceptions import TimeoutException
 
 
-class FindGroup(Base):
+class Add_Product_To_Cart(Base):
     def __init__(self, driver):
         super().__init__(driver)
         self.driver = driver
@@ -100,7 +100,7 @@ class FindGroup(Base):
             EC.element_to_be_clickable((By.XPATH, self.checkout_button)))
 
     def get_member_version_checkout(self):
-        return WebDriverWait(self.driver, 30).until(  # Увеличили время ожидания до 30 секунд
+        return WebDriverWait(self.driver, 30).until(
             EC.visibility_of_element_located((By.XPATH, self.member_version_checkout)))
 
     '''Actions'''
@@ -218,32 +218,27 @@ class FindGroup(Base):
 
     '''Methods'''
 
-    def find_group_with_settings(self):
+    def add_product_to_cart_with_settings(self):
         self.click_search_button()
         self.write_info_search_string('Stray Kids')
         self.submit_search()
-        time.sleep(1)
         self.click_filter_price_button()
         self.write_price_from('20')
         self.write_price_to('50')
         self.submit_price_range()
-        time.sleep(1)
         self.click_availability_button()
-        time.sleep(1)
+        time.sleep(3)
         self.click_in_stock_checkbox()
+        time.sleep(3)
         self.click_sort_by_low_to_high()
         time.sleep(3)
         self.check_prices_sorted()
-        time.sleep(3)
         self.click_on_the_product()
-        time.sleep(3)
         self.click_on_the_picked_member()
+        time.sleep(3)
         self.check_version_label()
         time.sleep(3)
         self.click_add_to_cart_button()
-        time.sleep(2)
         self.click_checkout_button()
-        time.sleep(2)
         self.get_current_url()
-        time.sleep(10)
         self.check_member_version_checkout()
